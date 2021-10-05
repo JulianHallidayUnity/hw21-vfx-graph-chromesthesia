@@ -79,8 +79,8 @@ Material:
     - _DstBlend: 10
     - _EnableBlendModePreserveSpecularLighting: 1
     - _EnableFogOnTransparent: 1
-    - _Foam_Distance: -14.2
-    - _Foam_Strength: 0.6
+    - _Foam_Distance: 123.76
+    - _Foam_Strength: 97.12
     - _ForceForwardEmissive: 0
     - _Normal_Strength: 0.13
     - _Normal_Tile: 1.2
