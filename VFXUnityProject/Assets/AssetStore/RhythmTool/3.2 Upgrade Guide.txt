@@ -1,0 +1,4 @@
+Version 3.2 introduces a few changes that might require some changes to be made to your project.
+
+The most significant change is that RhythmData now directly references an AudioClip and the RhythmPlayer can no longer be given an AudioClip. 
+In instances where you give a RhythmPlayer a RhythmData and an AudioClip, simply remove the line where you assign the AudioClip.
