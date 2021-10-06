@@ -29,28 +29,45 @@ public class EnvironmentManager : MonoBehaviour
     
     //---- Fog ----
     [Header("Fog")]
+    public bool FogUpdatesEnabled = true;
     [SerializeField]
     private float _startingFogDensity = 10;
     [SerializeField]
     private Vector2 _fogClamp = new Vector2(10, 40);
     private Fog _fog;
-    
     [SerializeField]
     private float _fogUpdateSpeed;
     [SerializeField] private AnimationCurve _fogDensityRamp = AnimationCurve.EaseInOut(0,0,1,1);
     
-    [ReadOnly]
+    [ReadOnly][SerializeField]
     private float _fogRatio;
-    [ReadOnly]
+    [ReadOnly][SerializeField]
     private float _rampedFogRatio;
-    [ReadOnly]
+    [ReadOnly][SerializeField]
     private float _desiredFogDensity;
-    [ReadOnly]
+    [ReadOnly][SerializeField]
     private float _currentFogDensity;
 
+    
+    //---- Chromatic Aberration ----
+    [Header("Chromatic Aberration"), Space()]
+    public bool ChromaticAberrationUpdatesEnabled = true;
+    [SerializeField] private float _startingAberrationIntensity = 0;
+    [SerializeField]
+    private Vector2 _chromaticAberrationClamp = new Vector2(0, 1);
+    [SerializeField] private float _aberrationUpdateSpeed = 0.1f;
+    [SerializeField] private AnimationCurve _aberrationIntensityRamp = AnimationCurve.EaseInOut(0,0,1,1);
+    
+    private ChromaticAberration _chromaticAberration;
 
+    [SerializeField][ReadOnly]
+    private float _desiredAberrationIntensity;
+    [SerializeField][ReadOnly]
+    private float _currentAberrationIntensity;
+    
     //---- Ocean ----
-    [Header("Ocean"), Space(15)]
+    [Header("Ocean"), Space()]
+    public bool OceanChoppinessUpdatesEnabled = true;
     [SerializeField]
     private Renderer _oceanTile;
     private static Material _oceanMaterial;
@@ -65,10 +82,10 @@ public class EnvironmentManager : MonoBehaviour
     public float ChoppinessModifier = 0;
     
     [SerializeField] private AnimationCurve _choppinessRamp = AnimationCurve.EaseInOut(0,0,1,1);
-    [ReadOnly]
-    public float _choppinessRatio;
-    [ReadOnly]
-    public float _rampedChoppinessRatio;
+    [ReadOnly][SerializeField]
+    private float _choppinessRatio;
+    [ReadOnly][SerializeField]
+    private float _rampedChoppinessRatio;
     
     [SerializeField][ReadOnly]
     private float _desiredOceanChoppiness;
@@ -95,6 +112,12 @@ public class EnvironmentManager : MonoBehaviour
             ApplyFogDensity(_startingFogDensity);
         }
         
+        if (_currentProfile.TryGet(out _chromaticAberration))
+        {
+            _currentAberrationIntensity = _startingAberrationIntensity;
+            ApplyAberrationIntensity(_startingAberrationIntensity);
+        }
+        
         _oceanMaterial = _oceanTile.sharedMaterial;
         _waveSpeedClamp = new Vector2
         {
@@ -111,17 +134,41 @@ public class EnvironmentManager : MonoBehaviour
         
         UpdateOcean();
         UpdateFog();
+        UpdateChromaticAberrationIntensity();
     }
 
+    #region ----- Fog -----
     public void SetFogDensity(float ratio)
     {
+        if (!FogUpdatesEnabled) return;
+        
         _fogRatio = ratio;
         _rampedFogRatio = _fogDensityRamp.Evaluate(ratio);
         _desiredFogDensity = Mathf.Lerp(_fogClamp.x, _fogClamp.y, _rampedFogRatio);
     }
+    
+    private void UpdateFog()
+    {
+        _currentFogDensity = Mathf.Lerp(_currentFogDensity, _desiredFogDensity,
+            Time.deltaTime * _fogUpdateSpeed);
 
+        ApplyFogDensity(_currentFogDensity);
+    }
+
+    private void ApplyFogDensity(float value)
+    {
+        if (_fog != null)
+        {
+            _fog.meanFreePath.value = value;
+        }
+    }
+    #endregion
+
+    #region ---- Ocean ----
     public void SetOceanChoppiness(float ratio)
     {
+        if (!OceanChoppinessUpdatesEnabled) return;
+        
         _choppinessRatio = ratio;
         _rampedChoppinessRatio = _choppinessRamp.Evaluate(ratio + ratio * ChoppinessModifier);
         _desiredOceanChoppiness = _rampedChoppinessRatio;
@@ -152,20 +199,31 @@ public class EnvironmentManager : MonoBehaviour
             });
         }
     }
+    #endregion
 
-    private void UpdateFog()
+    #region ---- Chromatic Aberration ----
+    public void SetChromaticAberrationIntensity(float ratio)
     {
-        _currentFogDensity = Mathf.Lerp(_currentFogDensity, _desiredFogDensity,
-            Time.deltaTime * _fogUpdateSpeed);
-
-        ApplyFogDensity(_currentFogDensity);
+        if (!ChromaticAberrationUpdatesEnabled) return;
+        
+        float rampedIntensity = _aberrationIntensityRamp.Evaluate(ratio);
+        _desiredAberrationIntensity = Mathf.Lerp(_chromaticAberrationClamp.x, _chromaticAberrationClamp.y, rampedIntensity);
     }
-
-    private void ApplyFogDensity(float value)
+    
+    private void UpdateChromaticAberrationIntensity()
     {
-        if (_fog != null)
+        _currentAberrationIntensity = Mathf.Lerp(_currentAberrationIntensity, _desiredAberrationIntensity,
+            Time.deltaTime * _aberrationUpdateSpeed);
+
+        ApplyAberrationIntensity(_currentAberrationIntensity);
+    }
+    
+    private void ApplyAberrationIntensity(float intensity)
+    {
+        if (_chromaticAberration != null)
         {
-            _fog.meanFreePath.value = value;
+            _chromaticAberration.intensity.value = intensity;
         }
     }
+    #endregion
 }
