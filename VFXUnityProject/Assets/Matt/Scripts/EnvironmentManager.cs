@@ -28,22 +28,24 @@ public class EnvironmentManager : MonoBehaviour
     public bool UpdateBlend = true;
     
     //---- Fog ----
-    [Header("Fog"), Space(15)]
+    [Header("Fog")]
+    [SerializeField]
+    private float _startingFogDensity = 10;
     [SerializeField]
     private Vector2 _fogClamp = new Vector2(10, 40);
     private Fog _fog;
     
-    [ReadOnly]
-    public float _fogRatio;
-    [ReadOnly]
-    public float _rampedFogRatio;
-    
     [SerializeField]
     private float _fogUpdateSpeed;
     [SerializeField] private AnimationCurve _fogDensityRamp = AnimationCurve.EaseInOut(0,0,1,1);
-    [SerializeField][ReadOnly]
+    
+    [ReadOnly]
+    private float _fogRatio;
+    [ReadOnly]
+    private float _rampedFogRatio;
+    [ReadOnly]
     private float _desiredFogDensity;
-    [SerializeField][ReadOnly]
+    [ReadOnly]
     private float _currentFogDensity;
 
 
@@ -57,8 +59,11 @@ public class EnvironmentManager : MonoBehaviour
     [SerializeField]
     private float _waveSpeedScale = 1f;
     
+    [SerializeField]
+    private float _startingChoppiness = 0;
     public float OceanUpdateSpeed = 0.1f;
     public float ChoppinessModifier = 0;
+    
     [SerializeField] private AnimationCurve _choppinessRamp = AnimationCurve.EaseInOut(0,0,1,1);
     [ReadOnly]
     public float _choppinessRatio;
@@ -86,7 +91,8 @@ public class EnvironmentManager : MonoBehaviour
         _currentProfile = _globalVolume.profile;
         if (_currentProfile.TryGet(out _fog))
         {
-            _currentFogDensity = _fog.meanFreePath.value;
+            _currentFogDensity = _startingFogDensity;
+            ApplyFogDensity(_startingFogDensity);
         }
         
         _oceanMaterial = _oceanTile.sharedMaterial;
@@ -95,6 +101,8 @@ public class EnvironmentManager : MonoBehaviour
             x = _oceanMaterial.GetFloat(_minWaveSpeedProperty),
             y = _oceanMaterial.GetFloat(_maxWaveSpeedProperty),
         };
+        
+        ApplyOceanValues(0, _startingChoppiness);
     }
 
     private void Update()
@@ -123,14 +131,19 @@ public class EnvironmentManager : MonoBehaviour
     {
         _currentOceanChoppiness = Mathf.Lerp(_currentOceanChoppiness, _desiredOceanChoppiness,
             Time.deltaTime * OceanUpdateSpeed);
-        _oceanMaterial.SetFloat(_choppinessProperty, _currentOceanChoppiness);
 
+        //Calculate Wave Texture Offset
         _waveSpeed = Mathf.Lerp(_waveSpeedClamp.x, _waveSpeedClamp.y, _currentOceanChoppiness);
         _waveSpeedModifier = _waveSpeed * _waveSpeedScale;
-        
         _wavePhase += Time.deltaTime + _waveSpeedModifier;
-        _oceanMaterial.SetFloat(_wavePositionProperty, _wavePhase);
-        
+
+        ApplyOceanValues(_wavePhase, _currentOceanChoppiness);
+    }
+
+    private void ApplyOceanValues(float wavePhase, float choppiness)
+    {
+        _oceanMaterial.SetFloat(_choppinessProperty, choppiness);
+        _oceanMaterial.SetFloat(_wavePositionProperty, wavePhase);
         if (UpdateBlend)
         {
             Array.ForEach(_positionBlends, pb =>
@@ -144,10 +157,15 @@ public class EnvironmentManager : MonoBehaviour
     {
         _currentFogDensity = Mathf.Lerp(_currentFogDensity, _desiredFogDensity,
             Time.deltaTime * _fogUpdateSpeed);
-        
+
+        ApplyFogDensity(_currentFogDensity);
+    }
+
+    private void ApplyFogDensity(float value)
+    {
         if (_fog != null)
         {
-            _fog.meanFreePath.value = _currentFogDensity;
+            _fog.meanFreePath.value = value;
         }
     }
 }
