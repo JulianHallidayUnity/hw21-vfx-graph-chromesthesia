@@ -2,18 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RhythmTool;
+using UnityEngine.Events;
 using UnityEngine.VFX;
 
 public class RhythmInterpreter : MonoBehaviour
 {
+    [Header("Core")]
     [SerializeField] RhythmData rhythmData;
     [SerializeField] AudioSource audioSource;
     [SerializeField] VisualEffect vfx;
-
     [SerializeField] float maxVolume = 4f;
     [SerializeField] float maxOnsetStrength = 4f;
     [SerializeField] float onsetFade = 0.8f;
 
+    [Header("Animator Control")]
+    [SerializeField] bool useAnimator = false;
+    [SerializeField] Animator playbackSpeedAnimator;
+    [SerializeField] float playbackSpeed = 4f;
+
+    [Header("Background Transform")]
+    [SerializeField] bool useBackground = false;
+    [SerializeField] Transform backgroundTransform;
+
+    [Header("Rythm Events")]
+    [SerializeField] private UnityEvent<float> _onBeatUpdate = new UnityEvent<float>();
+    [SerializeField] private UnityEvent<float> _onVolumeUpdate = new UnityEvent<float>();
+    [SerializeField] private UnityEvent<float> _onChromaUpdate = new UnityEvent<float>();
+    [SerializeField] private UnityEvent<float> _onOnsetPowerUpdate = new UnityEvent<float>();
+    
+    
     private float prevTime;
     private int onsetCount = 0;
     private int chromaCount = 0;
@@ -41,14 +58,9 @@ public class RhythmInterpreter : MonoBehaviour
         //rhythmData.GetFeatures<Feature>(segments, prevTime, time);
 
         // Got beats this frame?
-        if (beats.Count > 0)
-        {
-            vfx.SetFloat("BeatFloat", 1f);
-        }
-        else
-        {
-            vfx.SetFloat("BeatFloat", 0f);
-        }
+        float beatValue = beats.Count > 0 ? 1 : 0;
+        vfx.SetFloat("BeatFloat", beatValue);
+        _onBeatUpdate?.Invoke(beatValue);
 
         // ------------------------- ONSET -------------------------
         // Decrease the value of the onsetPower every frame to fade out the 'hit'.
@@ -65,11 +77,18 @@ public class RhythmInterpreter : MonoBehaviour
         }
 
         vfx.SetFloat("OnsetFloat", onsetPower);
+        _onOnsetPowerUpdate?.Invoke(onsetPower);
 
-
-        foreach (Value val in volumes)
+        if (volumes.Count > 1)
         {
-            vfx.SetFloat("VolumeFloat", Mathf.Clamp01(val.value / maxVolume));
+            float volumeSample = volumes[volumes.Count - 1].value;
+            float volumeValue = Mathf.Clamp01(volumeSample / maxVolume);
+            vfx.SetFloat("VolumeFloat", volumeValue);
+            _onVolumeUpdate?.Invoke(volumeValue);
+            if (useAnimator)
+            {
+                playbackSpeedAnimator.speed = volumeSample * playbackSpeed;
+            }
         }
 
         // A new Chroma is added to the list every time a chroma occurs (the list is never cleared after Start)
@@ -80,9 +99,16 @@ public class RhythmInterpreter : MonoBehaviour
             // There are 11 notes in the Note enum, but does this plugin also deal in octaves?
             float normalizedNoteValue = Mathf.Clamp01((float)((int)chromas[chromaCount - 1].note) / 11f);
             vfx.SetFloat("ChromaFloat", normalizedNoteValue);
+            _onChromaUpdate?.Invoke(normalizedNoteValue);
         }
 
         //Keep track of the previous playback time of the AudioSource.
         prevTime = time;
+
+        if (useBackground)
+        {
+            vfx.SetVector3("BackgroundPosition", backgroundTransform.position);
+            vfx.SetVector3("BackgroundRotation", backgroundTransform.eulerAngles);
+        }
     }
 }
