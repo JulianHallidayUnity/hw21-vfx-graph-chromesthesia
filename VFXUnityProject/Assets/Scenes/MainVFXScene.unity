@@ -583,17 +583,9 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1762367781}
     m_Modifications:
-    - target: {fileID: 1125164405739385268, guid: 473279baa6da850409617168032c1a1b, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1125164406042979376, guid: 473279baa6da850409617168032c1a1b, type: 3}
       propertyPath: m_Name
       value: VFX_JTest02
-      objectReference: {fileID: 0}
-    - target: {fileID: 1125164406042979376, guid: 473279baa6da850409617168032c1a1b, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1125164406042979379, guid: 473279baa6da850409617168032c1a1b, type: 3}
       propertyPath: m_RootOrder

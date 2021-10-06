@@ -90,7 +90,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1125164405739385162}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -139,7 +139,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1125164406042979379
 Transform:
   m_ObjectHideFlags: 0
@@ -868,7 +868,7 @@ MonoBehaviour:
   onsetFade: 0.99
   useAnimator: 1
   playbackSpeedAnimator: {fileID: 2671286922423143272}
-  playbackSpeed: 4
+  playbackSpeed: 1
   useBackground: 1
   backgroundTransform: {fileID: 5181342306729624989}
 --- !u!114 &1648903495
