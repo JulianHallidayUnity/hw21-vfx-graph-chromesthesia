@@ -100,10 +100,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e88178bb13f64a54f90d6cd6ef7aa9a1, type: 3}
   m_Name: CloudLayer
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   opacity:
     m_OverrideState: 1
-    m_Value: 0.568
+    m_Value: 1
   upperHemisphereOnly:
     m_OverrideState: 0
     m_Value: 1
@@ -143,7 +143,7 @@ MonoBehaviour:
       m_Value: 0
     rotation:
       m_OverrideState: 1
-      m_Value: 360
+      m_Value: 0
     tint:
       m_OverrideState: 0
       m_Value: {r: 1, g: 1, b: 1, a: 1}
@@ -180,7 +180,7 @@ MonoBehaviour:
       m_OverrideState: 1
       m_Value: 0.183
     castShadows:
-      m_OverrideState: 0
+      m_OverrideState: 1
       m_Value: 1
   layerB:
     cloudMap:
@@ -316,7 +316,7 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 0
   cloudType:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
   skyAmbientMode:
     m_OverrideState: 1

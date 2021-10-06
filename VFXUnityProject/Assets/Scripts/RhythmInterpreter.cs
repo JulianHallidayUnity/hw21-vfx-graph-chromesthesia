@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RhythmTool;
+using UnityEngine.Events;
 using UnityEngine.VFX;
 
 public class RhythmInterpreter : MonoBehaviour
@@ -25,6 +26,11 @@ public class RhythmInterpreter : MonoBehaviour
     private List<Chroma> chromas = new List<Chroma>();
     //private List<Segmenter> segments = new List<Segmenter>();
 
+    public UnityEvent<float> OnBeatChange = new UnityEvent<float>();
+    public UnityEvent<float> OnOnsetPowerChange = new UnityEvent<float>();
+    public UnityEvent<float> OnVolumeChange = new UnityEvent<float>();
+    public UnityEvent<float> OnChromaChange = new UnityEvent<float>();
+    
     void Update()
     {
         //Get the current playback time of the AudioSource.
@@ -44,10 +50,12 @@ public class RhythmInterpreter : MonoBehaviour
         if (beats.Count > 0)
         {
             vfx.SetFloat("BeatFloat", 1f);
+            OnBeatChange?.Invoke(1);
         }
         else
         {
             vfx.SetFloat("BeatFloat", 0f);
+            OnBeatChange?.Invoke(0);
         }
 
         // ------------------------- ONSET -------------------------
@@ -65,11 +73,13 @@ public class RhythmInterpreter : MonoBehaviour
         }
 
         vfx.SetFloat("OnsetFloat", onsetPower);
-
+        OnOnsetPowerChange?.Invoke(onsetPower);
 
         foreach (Value val in volumes)
         {
-            vfx.SetFloat("VolumeFloat", Mathf.Clamp01(val.value / maxVolume));
+            var clampedV = Mathf.Clamp01(val.value / maxVolume);
+            vfx.SetFloat("VolumeFloat", clampedV);
+            OnVolumeChange?.Invoke(clampedV);
         }
 
         // A new Chroma is added to the list every time a chroma occurs (the list is never cleared after Start)
@@ -80,6 +90,7 @@ public class RhythmInterpreter : MonoBehaviour
             // There are 11 notes in the Note enum, but does this plugin also deal in octaves?
             float normalizedNoteValue = Mathf.Clamp01((float)((int)chromas[chromaCount - 1].note) / 11f);
             vfx.SetFloat("ChromaFloat", normalizedNoteValue);
+            OnChromaChange?.Invoke(normalizedNoteValue);
         }
 
         //Keep track of the previous playback time of the AudioSource.

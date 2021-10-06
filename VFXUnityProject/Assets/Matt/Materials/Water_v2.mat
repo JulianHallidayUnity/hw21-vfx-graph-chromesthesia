@@ -179,10 +179,11 @@ Material:
     - _AlphaToMaskInspectorValue: 0
     - _Anisotropy: 0
     - _BlendMode: 0
-    - _Choppiness: 0.3
+    - _Choppiness: 0.000039108916
     - _Clamp: 0
     - _CoatMask: 0.707
     - _ConservativeDepthOffsetEnable: 0
+    - _Constant_Wave_Position: 1
     - _Contrast: 1
     - _CullMode: 2
     - _CullModeForward: 2
@@ -205,6 +206,7 @@ Material:
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 0
     - _DstBlend: 10
+    - _Duration: 0
     - _EmissiveColorMode: 1
     - _EmissiveExposureWeight: 1
     - _EmissiveIntensity: 1
@@ -246,7 +248,7 @@ Material:
     - _Min_Wave_Height: 0.8
     - _NormalMapSpace: 0
     - _NormalScale: 1
-    - _Normal_Strength: 0.13
+    - _Normal_Strength: 0.16
     - _Normal_Tile: 5.5
     - _Opacity: 0
     - _OpaqueCullMode: 2
@@ -283,7 +285,7 @@ Material:
     - _SurfaceType: 1
     - _Surface_1_Scale: 1
     - _Surface_1_Tile: 1
-    - _Surface_2_Scale: 0.74
+    - _Surface_2_Scale: -0.34
     - _Surface_2_Tile: 10
     - _Surface_2_Tiling: 45
     - _Surface_Speed: 1
@@ -303,10 +305,12 @@ Material:
     - _UVEmissive: 0
     - _UseEmissiveIntensity: 0
     - _UseShadowThreshold: 0
+    - _WavePosition: 1446.6119
     - _WaveTile: -1.76
     - _Wave_Height: 1
+    - _Wave_Position: 0
     - _Wave_Scale: 0.96
-    - _Wave_Speed: 2
+    - _Wave_Speed: 0.036
     - _Wave_Strength: 7
     - _Wave_Tile: 1
     - _Wave_Tile_Scale: 0.83
