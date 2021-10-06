@@ -466,7 +466,7 @@ MonoBehaviour:
   _targetRenderer: {fileID: 7393745617338860351}
   _fadeInTime: 7
   _fadeInDuration: 0.05
-  _fadeOutTime: 196
+  _fadeOutTime: 195.4
   _fadeOutDuration: 0.05
 --- !u!33 &5007392127000724643
 MeshFilter:
