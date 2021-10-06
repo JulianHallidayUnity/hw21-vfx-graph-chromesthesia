@@ -14,7 +14,6 @@ public class Floating : MonoBehaviour
     private void Awake()
     {
         _rootPosition = transform.localPosition;
-        Debug.Log($"{gameObject.name} starting position = {_rootPosition.x}, {_rootPosition.y}, {_rootPosition.z}");
     }
 
     private void OnDisable()
@@ -45,8 +44,6 @@ public class Floating : MonoBehaviour
         _nextPosition.y = RandomWithinLimit(_rootPosition.y, DriftLimits.y);
         _nextPosition.z = RandomWithinLimit(_rootPosition.z, DriftLimits.z);
 
-        Debug.Log($"{gameObject.name} calculated a new position = {_nextPosition.x}, {_nextPosition.y}, {_nextPosition.z}");
-        
         float RandomWithinLimit(float root, float limit)
         {
             return Random.Range(root-limit, root+limit);

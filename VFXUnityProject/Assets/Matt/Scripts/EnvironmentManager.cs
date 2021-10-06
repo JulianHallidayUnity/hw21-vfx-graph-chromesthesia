@@ -7,14 +7,6 @@ using UnityEngine.Rendering.HighDefinition;
 
 public class EnvironmentManager : MonoBehaviour
 {
-    private static readonly int _wavePositionProperty = Shader.PropertyToID("_WavePosition");
-    private static readonly int _choppinessProperty = Shader.PropertyToID("_Choppiness");
-    private static readonly int _minWaveSpeedProperty = Shader.PropertyToID("_MinSpeed");
-    private static readonly int _maxWaveSpeedProperty = Shader.PropertyToID("_MaxSpeed");
-
-    [SerializeField] private Volume _globalVolume;
-    private CloudLayer _clouds;
-    
     [Serializable]
     public class PositionBlend
     {
@@ -24,15 +16,42 @@ public class EnvironmentManager : MonoBehaviour
         public Vector3 HighPosition;
     }
 
-    [SerializeField]
-    private Renderer _oceanTile;
-    
-    public bool UpdateBlend = true;
+    private readonly int _wavePositionProperty = Shader.PropertyToID("_WavePosition");
+    private readonly int _choppinessProperty = Shader.PropertyToID("_Choppiness");
+    private readonly int _minWaveSpeedProperty = Shader.PropertyToID("_MinSpeed");
+    private readonly int _maxWaveSpeedProperty = Shader.PropertyToID("_MaxSpeed");
+
+    [SerializeField] private Volume _globalVolume;
+    private VolumeProfile _currentProfile;
 
     [SerializeField] private PositionBlend[] _positionBlends = {};
+    public bool UpdateBlend = true;
+    
+    //---- Fog ----
+    [Header("Fog"), Space(15)]
+    [SerializeField]
+    private Vector2 _fogClamp = new Vector2(10, 40);
+    private Fog _fog;
+    
+    [ReadOnly]
+    public float _fogRatio;
+    [ReadOnly]
+    public float _rampedFogRatio;
+    
+    [SerializeField]
+    private float _fogUpdateSpeed;
+    [SerializeField] private AnimationCurve _fogDensityRamp = AnimationCurve.EaseInOut(0,0,1,1);
+    [SerializeField][ReadOnly]
+    private float _desiredFogDensity;
+    [SerializeField][ReadOnly]
+    private float _currentFogDensity;
 
+
+    //---- Ocean ----
+    [Header("Ocean"), Space(15)]
+    [SerializeField]
+    private Renderer _oceanTile;
     private static Material _oceanMaterial;
-
     private float _wavePhase;
     private Vector2 _waveSpeedClamp = new Vector2(0, 1);
     [SerializeField]
@@ -40,12 +59,21 @@ public class EnvironmentManager : MonoBehaviour
     
     public float OceanUpdateSpeed = 0.1f;
     public float ChoppinessModifier = 0;
-    
+    [SerializeField] private AnimationCurve _choppinessRamp = AnimationCurve.EaseInOut(0,0,1,1);
     [ReadOnly]
-    public float _desiredOceanChoppiness;
-    
+    public float _choppinessRatio;
     [ReadOnly]
-    public float _currentOceanChoppiness;
+    public float _rampedChoppinessRatio;
+    
+    [SerializeField][ReadOnly]
+    private float _desiredOceanChoppiness;
+    [SerializeField][ReadOnly]
+    private float _currentOceanChoppiness;
+    
+    
+    private float _duration;
+    
+    //---- Debug ----
     
     [ReadOnly]
     public float _waveSpeed;
@@ -55,7 +83,11 @@ public class EnvironmentManager : MonoBehaviour
     
     private void Start()
     {
-        _globalVolume.sharedProfile.TryGet(out _clouds);
+        _currentProfile = _globalVolume.profile;
+        if (_currentProfile.TryGet(out _fog))
+        {
+            _currentFogDensity = _fog.meanFreePath.value;
+        }
         
         _oceanMaterial = _oceanTile.sharedMaterial;
         _waveSpeedClamp = new Vector2
@@ -67,20 +99,24 @@ public class EnvironmentManager : MonoBehaviour
 
     private void Update()
     {
+        _duration += Time.deltaTime;
+        
         UpdateOcean();
+        UpdateFog();
     }
 
-    public void SetCloudOpacity(float opacity)
+    public void SetFogDensity(float ratio)
     {
-        if (_clouds != null)
-        {
-            _clouds.opacity.value = opacity;
-        }
+        _fogRatio = ratio;
+        _rampedFogRatio = _fogDensityRamp.Evaluate(ratio);
+        _desiredFogDensity = Mathf.Lerp(_fogClamp.x, _fogClamp.y, _rampedFogRatio);
     }
 
-    public void SetOceanChoppiness(float choppiness)
+    public void SetOceanChoppiness(float ratio)
     {
-        _desiredOceanChoppiness = choppiness + choppiness * ChoppinessModifier;
+        _choppinessRatio = ratio;
+        _rampedChoppinessRatio = _choppinessRamp.Evaluate(ratio + ratio * ChoppinessModifier);
+        _desiredOceanChoppiness = _rampedChoppinessRatio;
     }
 
     private void UpdateOcean()
@@ -91,6 +127,7 @@ public class EnvironmentManager : MonoBehaviour
 
         _waveSpeed = Mathf.Lerp(_waveSpeedClamp.x, _waveSpeedClamp.y, _currentOceanChoppiness);
         _waveSpeedModifier = _waveSpeed * _waveSpeedScale;
+        
         _wavePhase += Time.deltaTime + _waveSpeedModifier;
         _oceanMaterial.SetFloat(_wavePositionProperty, _wavePhase);
         
@@ -100,6 +137,17 @@ public class EnvironmentManager : MonoBehaviour
             {
                 pb.Transform.localPosition = Vector3.Lerp(pb.LowPosition, pb.HighPosition, _currentOceanChoppiness);
             });
+        }
+    }
+
+    private void UpdateFog()
+    {
+        _currentFogDensity = Mathf.Lerp(_currentFogDensity, _desiredFogDensity,
+            Time.deltaTime * _fogUpdateSpeed);
+        
+        if (_fog != null)
+        {
+            _fog.meanFreePath.value = _currentFogDensity;
         }
     }
 }
