@@ -6,13 +6,22 @@ using UnityEngine.VFX;
 
 public class RhythmInterpreter : MonoBehaviour
 {
+    [Header("Core")]
     [SerializeField] RhythmData rhythmData;
     [SerializeField] AudioSource audioSource;
     [SerializeField] VisualEffect vfx;
-
     [SerializeField] float maxVolume = 4f;
     [SerializeField] float maxOnsetStrength = 4f;
     [SerializeField] float onsetFade = 0.8f;
+
+    [Header("Animator Control")]
+    [SerializeField] bool useAnimator = false;
+    [SerializeField] Animator playbackSpeedAnimator;
+    [SerializeField] float playbackSpeed = 4f;
+
+    [Header("Background Transform")]
+    [SerializeField] bool useBackground = false;
+    [SerializeField] Transform backgroundTransform;
 
     private float prevTime;
     private int onsetCount = 0;
@@ -66,10 +75,14 @@ public class RhythmInterpreter : MonoBehaviour
 
         vfx.SetFloat("OnsetFloat", onsetPower);
 
-
-        foreach (Value val in volumes)
+        if (volumes.Count > 1)
         {
-            vfx.SetFloat("VolumeFloat", Mathf.Clamp01(val.value / maxVolume));
+            float volumeSample = volumes[volumes.Count - 1].value;
+            vfx.SetFloat("VolumeFloat", Mathf.Clamp01(volumeSample / maxVolume));
+            if (useAnimator)
+            {
+                playbackSpeedAnimator.speed = volumeSample * playbackSpeed;
+            }
         }
 
         // A new Chroma is added to the list every time a chroma occurs (the list is never cleared after Start)
@@ -84,5 +97,11 @@ public class RhythmInterpreter : MonoBehaviour
 
         //Keep track of the previous playback time of the AudioSource.
         prevTime = time;
+
+        if (useBackground)
+        {
+            vfx.SetVector3("BackgroundPosition", backgroundTransform.position);
+            vfx.SetVector3("BackgroundRotation", backgroundTransform.eulerAngles);
+        }
     }
 }
