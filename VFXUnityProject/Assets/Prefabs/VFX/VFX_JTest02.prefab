@@ -517,7 +517,7 @@ MonoBehaviour:
   clearDepth: 1
   volumeLayerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 0
   volumeAnchorOverride: {fileID: 0}
   antialiasing: 0
   SMAAQuality: 2
@@ -871,6 +871,18 @@ MonoBehaviour:
   playbackSpeed: 1
   useBackground: 1
   backgroundTransform: {fileID: 5181342306729624989}
+  _onBeatUpdate:
+    m_PersistentCalls:
+      m_Calls: []
+  _onVolumeUpdate:
+    m_PersistentCalls:
+      m_Calls: []
+  _onChromaUpdate:
+    m_PersistentCalls:
+      m_Calls: []
+  _onOnsetPowerUpdate:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1648903495
 MonoBehaviour:
   m_ObjectHideFlags: 0

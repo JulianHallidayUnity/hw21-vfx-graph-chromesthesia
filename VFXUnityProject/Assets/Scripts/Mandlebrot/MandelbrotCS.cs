@@ -34,12 +34,12 @@ public class MandelbrotCS : MonoBehaviour
     void Start()
     {
         width = 4.5;
-        height = width * Screen.height / Screen.width;
+        height = width * Screen.height / Screen.width * 2.0;
         rStart = -2.0;
         iStart = -1.25;
         maxIterations = 100;
         increment = 3;
-        zoom = 0.5f;
+        zoom = 0.3f;
 
         data = new DataStruct[1];
 
@@ -101,8 +101,8 @@ public class MandelbrotCS : MonoBehaviour
 
     void CenterScreen()
     {
-        rStart += (Mouse.current.position.ReadValue().x - (Screen.width / 2.0)) / Screen.width * width;
-        iStart += (Mouse.current.position.ReadValue().y - (Screen.height / 2.0)) / Screen.height * height;
+        rStart += ((Mouse.current.position.ReadValue().x - (Screen.width / 2.0)) / Screen.width * width);
+        iStart += ((Mouse.current.position.ReadValue().y - (Screen.height / 2.0)) / Screen.height * height);
 
         data[0].r = rStart;
         data[0].i = iStart;
@@ -118,6 +118,8 @@ public class MandelbrotCS : MonoBehaviour
         double hFactor = height * zoom * Time.deltaTime;
         width -= wFactor;
         height -= hFactor;
+        rStart += ((Mouse.current.position.ReadValue().x - (Screen.width / 2.0)) / Screen.width * width) * 0.01;
+        iStart += ((Mouse.current.position.ReadValue().y - (Screen.height / 2.0)) / Screen.height * height) * 0.01;
         rStart += wFactor / 2.0;
         iStart += hFactor / 2.0;
 
