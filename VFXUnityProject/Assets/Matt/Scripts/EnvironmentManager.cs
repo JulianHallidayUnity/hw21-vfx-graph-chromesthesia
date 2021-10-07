@@ -92,6 +92,7 @@ public class EnvironmentManager : MonoBehaviour
     [SerializeField][ReadOnly]
     private float _currentOceanChoppiness;
     
+    //---- Scene Lights ----
     
     private float _duration;
     
