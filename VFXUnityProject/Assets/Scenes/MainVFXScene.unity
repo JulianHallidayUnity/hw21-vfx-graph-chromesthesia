@@ -408,6 +408,89 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1489724686
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1762367781}
+    m_Modifications:
+    - target: {fileID: 543388191, guid: ad9f7542d604eca40a8d6575f19e5a16, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 277783048}
+    - target: {fileID: 1199831446, guid: ad9f7542d604eca40a8d6575f19e5a16, type: 3}
+      propertyPath: vfx
+      value: 
+      objectReference: {fileID: 1584402295}
+    - target: {fileID: 1125164405739385268, guid: ad9f7542d604eca40a8d6575f19e5a16, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1125164406042979376, guid: ad9f7542d604eca40a8d6575f19e5a16, type: 3}
+      propertyPath: m_Name
+      value: VFX_JFractal01
+      objectReference: {fileID: 0}
+    - target: {fileID: 1125164406042979376, guid: ad9f7542d604eca40a8d6575f19e5a16, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1125164406042979379, guid: ad9f7542d604eca40a8d6575f19e5a16, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1125164406042979379, guid: ad9f7542d604eca40a8d6575f19e5a16, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1125164406042979379, guid: ad9f7542d604eca40a8d6575f19e5a16, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1125164406042979379, guid: ad9f7542d604eca40a8d6575f19e5a16, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1125164406042979379, guid: ad9f7542d604eca40a8d6575f19e5a16, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1125164406042979379, guid: ad9f7542d604eca40a8d6575f19e5a16, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1125164406042979379, guid: ad9f7542d604eca40a8d6575f19e5a16, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1125164406042979379, guid: ad9f7542d604eca40a8d6575f19e5a16, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1125164406042979379, guid: ad9f7542d604eca40a8d6575f19e5a16, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1125164406042979379, guid: ad9f7542d604eca40a8d6575f19e5a16, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1125164406042979379, guid: ad9f7542d604eca40a8d6575f19e5a16, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ad9f7542d604eca40a8d6575f19e5a16, type: 3}
+--- !u!4 &1489724687 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1125164406042979379, guid: ad9f7542d604eca40a8d6575f19e5a16, type: 3}
+  m_PrefabInstance: {fileID: 1489724686}
+  m_PrefabAsset: {fileID: 0}
+--- !u!2083052967 &1584402295 stripped
+VisualEffect:
+  m_CorrespondingSourceObject: {fileID: 1125164405739385271, guid: ad025383e625631488e6d32cd8b064fb, type: 3}
+  m_PrefabInstance: {fileID: 1125164404850728245}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1762367780
 GameObject:
   m_ObjectHideFlags: 0
@@ -438,6 +521,7 @@ Transform:
   m_Children:
   - {fileID: 2031120646}
   - {fileID: 6344267522116393675}
+  - {fileID: 1489724687}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
