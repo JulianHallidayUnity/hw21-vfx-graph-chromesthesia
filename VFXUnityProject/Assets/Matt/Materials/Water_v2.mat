@@ -179,7 +179,7 @@ Material:
     - _AlphaToMaskInspectorValue: 0
     - _Anisotropy: 0
     - _BlendMode: 0
-    - _Choppiness: 0.7515622
+    - _Choppiness: 0.9859166
     - _Clamp: 0
     - _CoatMask: 0.707
     - _ConservativeDepthOffsetEnable: 0
@@ -305,7 +305,7 @@ Material:
     - _UVEmissive: 0
     - _UseEmissiveIntensity: 0
     - _UseShadowThreshold: 0
-    - _WavePosition: 201.41891
+    - _WavePosition: 551.08936
     - _WaveTile: -1.76
     - _Wave_Height: 1
     - _Wave_Position: 0
