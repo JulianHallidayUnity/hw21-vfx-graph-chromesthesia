@@ -93,6 +93,11 @@ public class EnvironmentManager : MonoBehaviour
     private float _currentOceanChoppiness;
     
     //---- Scene Lights ----
+    [SerializeField] public bool EnableLightUpdates = true;
+    [SerializeField] private Gradient _lightColors;
+    [SerializeField] private Renderer _tubeLight;
+    [SerializeField] private Light[] _sceneLights;
+    private Material _sharedTubeLightMaterial;
     
     private float _duration;
     
@@ -127,6 +132,8 @@ public class EnvironmentManager : MonoBehaviour
         };
         
         ApplyOceanValues(0, _startingChoppiness);
+
+        _sharedTubeLightMaterial = _tubeLight.sharedMaterial;
     }
 
     private void Update()
@@ -227,4 +234,17 @@ public class EnvironmentManager : MonoBehaviour
         }
     }
     #endregion
+
+    public void SetLightingHue(float onsetFloat)
+    {
+        if (!EnableLightUpdates) return;
+
+        Color color = _lightColors.Evaluate(onsetFloat);
+        
+        _sharedTubeLightMaterial.color = color;
+        foreach (Light sceneLight in _sceneLights)
+        {
+            sceneLight.color = color;
+        }
+    }
 }
